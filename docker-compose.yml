@@ -20,6 +20,16 @@ services:
     networks:
       - reactive
 
+  reactive-mongoku:
+    image: huggingface/mongoku
+    hostname: reactive-mongoku
+    container_name: reactive-mongoku
+    restart: unless-stopped
+    ports:
+      - 3100:3100
+    networks:
+      - reactive
+
   reactive-zookeeper:
     image: confluentinc/cp-zookeeper:latest
     hostname: reactive-zookeeper
