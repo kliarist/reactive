@@ -1,0 +1,56 @@
+version: '3.8'
+
+networks:
+  reactive:
+
+services:
+
+  reactive-mongo:
+    image: mongo:latest
+    hostname: reactive-mongo
+    container_name: reactive-mongo
+    restart: unless-stopped
+    volumes:
+      - ~/docker-data/mongo:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=citizix
+      - MONGO_INITDB_ROOT_PASSWORD=S3cret
+    ports:
+      - 27017:27017
+    networks:
+      - reactive
+
+  reactive-zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    hostname: reactive-zookeeper
+    container_name: reactive-zookeeper
+    restart: unless-stopped
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - reactive
+
+  reactive-kafka:
+    image: confluentinc/cp-kafka:latest
+    hostname: reactive-kafka
+    container_name: reactive-kafka
+    restart: unless-stopped
+    ports:
+      - '29092:29092'
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: reactive-zookeeper:2181
+      KAFKA_LISTENERS: HOST://reactive-kafka:29092,DOCKER://reactive-kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: HOST:PLAINTEXT,DOCKER:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: HOST://reactive-kafka:19000,DOCKER://reactive-kafka:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: DOCKER
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_LOG4J_ROOT_LOGLEVEL: WARN
+      CONFLUENT_METRICS_ENABLE: 'false'
+      JMX_PORT: 9099
+    networks:
+      - reactive
