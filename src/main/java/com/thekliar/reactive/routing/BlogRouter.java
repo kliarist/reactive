@@ -10,14 +10,14 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 @Configuration
 public class BlogRouter {
 
-    @Bean
-    public RouterFunction<ServerResponse> composedRoutes(final BlogHandler blogHandler) {
+  @Bean
+  public RouterFunction<ServerResponse> composedRoutes(final BlogHandler blogHandler) {
 
-        return RouterFunctions.route()
-                .path("/blogs", builder -> builder
-                        .POST("", blogHandler::save)
-                        .GET("/{id}", blogHandler::findById)
-                        .GET("", blogHandler::findAll))
-                .build();
-    }
+    return RouterFunctions.route()
+        .path("/blogs", builder -> builder
+            .POST("", blogHandler::save)
+            .GET("/{id}", blogHandler::findById)
+            .GET("", blogHandler::findAll))
+        .build();
+  }
 }

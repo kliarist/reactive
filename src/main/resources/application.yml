@@ -1,0 +1,8 @@
+spring:
+  data:
+    mongodb:
+      host: desdora
+      port: 27017
+      username: citizix
+      password: S3cret
+      authentication-database: admin
