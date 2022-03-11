@@ -1,0 +1,21 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="ReactiveApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+    <module name="reactive.main" />
+    <extension name="com.egoshard.intellij.k8s-runtime-config-plugin">
+      <option name="ENABLED" value="false" />
+      <entries />
+    </extension>
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="com.thekliar.reactive.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.thekliar.reactive.ReactiveApplication" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <option name="SHORTEN_COMMAND_LINE" value="NONE" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

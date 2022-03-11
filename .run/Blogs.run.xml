@@ -1,0 +1,5 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Blogs" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" path="$APPLICATION_CONFIG_DIR$/scratches/GET_all_blogs.http" index="2" runType="Run single request">
+    <method v="2" />
+  </configuration>
+</component>
