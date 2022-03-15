@@ -1,6 +1,5 @@
 package com.thekliar.reactive.handler;
 
-import static org.springframework.web.reactive.function.BodyExtractors.toMono;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
 import com.thekliar.reactive.model.Blog;
@@ -19,8 +18,8 @@ public class BlogHandler {
 
   public Mono<ServerResponse> save(ServerRequest request) {
     return request
-        .body(toMono(Blog.class))
-        .doOnNext(blogRepository::save)
+        .bodyToMono(Blog.class)
+        .flatMap(blogRepository::insert)
         .then(ok().build());
   }
 

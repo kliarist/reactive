@@ -1,8 +1,9 @@
 spring:
   data:
     mongodb:
-      host: desdora
+      host: localhost
       port: 27017
       username: citizix
       password: S3cret
+      database: reactive-boot
       authentication-database: admin

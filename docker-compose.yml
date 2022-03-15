@@ -30,6 +30,25 @@ services:
     networks:
       - reactive
 
+  reactive-express:
+    image: mongo-express
+    hostname: reactive-express
+    container_name: reactive-express
+    restart: unless-stopped
+    ports:
+      - 8081:8081
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=reactive-mongo
+      - ME_CONFIG_MONGODB_PORT=27017
+      - ME_CONFIG_MONGODB_ENABLE_ADMIN=false
+      - ME_CONFIG_MONGODB_AUTH_DATABASE=admin
+      - ME_CONFIG_MONGODB_AUTH_USERNAME=citizix
+      - ME_CONFIG_MONGODB_AUTH_PASSWORD=S3cret
+      - ME_CONFIG_BASICAUTH_USERNAME=citizix
+      - ME_CONFIG_BASICAUTH_PASSWORD=S3cret
+    networks:
+      - reactive
+
   reactive-zookeeper:
     image: confluentinc/cp-zookeeper:latest
     hostname: reactive-zookeeper

@@ -5,6 +5,5 @@ import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRep
 
 @Configuration
 @EnableReactiveMongoRepositories(basePackages = "com.thekliar.reactive.repository")
-public class AppConfig {
-
+public class MongoConfig {
 }
