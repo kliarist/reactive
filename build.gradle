@@ -6,8 +6,8 @@ plugins {
 
 group = 'com.thekliar'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
-targetCompatibility = '17'
+sourceCompatibility = '11'
+targetCompatibility = '11'
 
 configurations {
   compileOnly {
@@ -24,14 +24,15 @@ dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-webflux'
   implementation 'org.apache.kafka:kafka-streams'
 
-  implementation "com.querydsl:querydsl-mongodb:$queryDslVersion"
+  implementation ("com.querydsl:querydsl-mongodb") {
+    exclude group: 'org.mongodb'
+  }
 
   compileOnly 'org.projectlombok:lombok'
 
   annotationProcessor(
       'org.projectlombok:lombok',
       "com.querydsl:querydsl-apt:$queryDslVersion:general",
-      'javax.annotation:javax.annotation-api'
   )
 
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
