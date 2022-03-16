@@ -1,8 +1,7 @@
 package com.thekliar.reactive.config.routing;
 
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.then;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.thekliar.reactive.handler.BlogHandler;
@@ -10,6 +9,7 @@ import com.thekliar.reactive.model.Blog;
 import com.thekliar.reactive.model.QBlog;
 import com.thekliar.reactive.repository.BlogRepository;
 import com.thekliar.reactive.routing.BlogRouter;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +40,11 @@ class BlogRouterTest {
     client = WebTestClient.bindToApplicationContext(context).build();
   }
 
+  @AfterEach
+  void tearDown() {
+    then(blogRepository).shouldHaveNoMoreInteractions();
+  }
+
   @Test
   void givenBlogId_whenGetBlogById_thenCorrectBlog() {
 
@@ -59,6 +64,8 @@ class BlogRouterTest {
         .isOk()
         .expectBody(Blog.class)
         .isEqualTo(blog);
+
+    then(blogRepository).should().findOne(eq);
   }
 
   @Test
@@ -85,6 +92,8 @@ class BlogRouterTest {
         .isOk()
         .expectBodyList(Blog.class)
         .isEqualTo(employees);
+
+    then(blogRepository).should().findAll();
   }
 
   @Test
@@ -95,7 +104,7 @@ class BlogRouterTest {
         .content("This is the content of the blog")
         .author("theo").build();
 
-    when(blogRepository.insert(blog)).thenReturn(Mono.just(blog));
+    given(blogRepository.insert(blog)).willReturn(Mono.just(blog));
 
     client.post()
         .uri("/blogs")
@@ -104,7 +113,26 @@ class BlogRouterTest {
         .expectStatus()
         .isOk();
 
-    verify(blogRepository).insert(blog);
+    then(blogRepository).should().insert(blog);
+  }
+
+  @Test
+  void whenDeleteBlog_thenBlogDeleted() {
+    Blog blog = Blog.builder()
+        .id("1")
+        .title("Blog1Title")
+        .content("This is the content of the blog")
+        .author("theo").build();
+
+    given(blogRepository.deleteById(blog.getId())).willReturn(Mono.empty());
+
+    client.delete()
+        .uri("/blogs/1")
+        .exchange()
+        .expectStatus()
+        .isOk();
+
+    then(blogRepository).should().deleteById(blog.getId());
   }
 
 }
