@@ -1,0 +1,23 @@
+POST http://localhost:8080/blogs
+Content-Type: application/json
+
+{
+  "id": 1,
+  "title": "title1",
+  "content": "content1",
+  "author": "author1"
+}
+
+###
+GET http://localhost:8080/blogs
+Accept: application/json
+
+###
+
+GET http://localhost:8080/blogs/1
+Accept: application/json
+
+###
+
+DELETE http://localhost:8080/blogs/1
+Accept: application/json
