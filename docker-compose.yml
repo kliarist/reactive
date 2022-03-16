@@ -19,6 +19,8 @@ services:
       - SPRING_DATA_MONGODB_PASSWORD=S3cret
     ports:
       - 8080:8080
+    depends_on:
+      - reactive-mongo
     networks:
       - reactive
 
