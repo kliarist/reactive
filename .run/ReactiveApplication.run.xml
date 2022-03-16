@@ -12,6 +12,7 @@
       </pattern>
     </extension>
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.thekliar.reactive.ReactiveApplication" />
+    <option name="VM_PARAMETERS" value="-Dspring.profiles.active=local" />
     <option name="ALTERNATIVE_JRE_PATH" />
     <option name="SHORTEN_COMMAND_LINE" value="NONE" />
     <method v="2">
