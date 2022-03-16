@@ -5,6 +5,23 @@ networks:
 
 services:
 
+  reactive-server:
+    image: reactive:0.0.1-SNAPSHOT
+    hostname: reactive-server
+    container_name: reactive-server
+    restart: unless-stopped
+    environment:
+      - SPRING_DATA_MONGODB_HOST=desdora
+      - SPRING_DATA_MONGODB_PORT=27017
+      - SPRING_DATA_MONGODB_DATABASE=reactive-boot
+      - SPRING_DATA_MONGODB_AUTHENTICATION-DATABASE=admin
+      - SPRING_DATA_MONGODB_USERNAME=citizix
+      - SPRING_DATA_MONGODB_PASSWORD=S3cret
+    ports:
+      - 8080:8080
+    networks:
+      - reactive
+
   reactive-mongo:
     image: mongo:latest
     hostname: reactive-mongo
