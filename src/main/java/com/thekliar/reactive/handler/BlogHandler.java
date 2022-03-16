@@ -21,8 +21,7 @@ public class BlogHandler {
   public Mono<ServerResponse> save(ServerRequest request) {
     return request
         .bodyToMono(Blog.class)
-//        .flatMap(blogRepository::save)
-        .doOnNext(blogRepository::insert)
+        .flatMap(blogRepository::insert)
         .then(ok().build());
   }
 

@@ -2,6 +2,7 @@ package com.thekliar.reactive.config.routing;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.thekliar.reactive.handler.BlogHandler;
@@ -93,6 +94,8 @@ class BlogRouterTest {
         .title("Blog1Title")
         .content("This is the content of the blog")
         .author("theo").build();
+
+    when(blogRepository.insert(blog)).thenReturn(Mono.just(blog));
 
     client.post()
         .uri("/blogs")
