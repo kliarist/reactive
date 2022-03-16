@@ -16,6 +16,7 @@ public class BlogRouter {
     return RouterFunctions.route()
         .path("/blogs", builder -> builder
             .POST("", blogHandler::save)
+            .DELETE("/{id}", blogHandler::deleteById)
             .GET("/{id}", blogHandler::findById)
             .GET("", blogHandler::findAll))
         .build();

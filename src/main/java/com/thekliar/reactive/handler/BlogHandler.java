@@ -27,10 +27,18 @@ public class BlogHandler {
 
   public Mono<ServerResponse> findById(ServerRequest request) {
     String id = request.pathVariable(ID);
-    return ok().body(blogRepository.findOne(QBlog.blog.id.eq(id)), Blog.class);
+    Mono<Blog> monoBlog = blogRepository.findOne(QBlog.blog.id.eq(id));
+    return ok().body(monoBlog, Blog.class);
   }
 
+  @SuppressWarnings("unused")
   public Mono<ServerResponse> findAll(ServerRequest request) {
     return ok().body(blogRepository.findAll(), Blog.class);
+  }
+
+  public Mono<ServerResponse> deleteById(ServerRequest request) {
+    String id = request.pathVariable(ID);
+    Mono<Void> monoVoid = blogRepository.deleteById(id);
+    return ok().body(monoVoid, Blog.class);
   }
 }
