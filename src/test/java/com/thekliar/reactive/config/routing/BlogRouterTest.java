@@ -109,7 +109,8 @@ class BlogRouterTest {
         .body(Mono.just(blog), Blog.class)
         .exchange()
         .expectStatus()
-        .isOk();
+        .isCreated()
+        .expectHeader().location("/blogs/1");
 
     then(blogRepository).should().insert(blog);
   }
