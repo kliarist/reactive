@@ -2,6 +2,7 @@ plugins {
   id 'org.springframework.boot' version '2.6.4'
   id 'io.spring.dependency-management' version '1.0.11.RELEASE'
   id 'java'
+  id 'jacoco'
   id 'com.palantir.git-version' version '0.13.0'
 }
 
@@ -36,17 +37,31 @@ dependencies {
       "com.querydsl:querydsl-apt:$queryDslVersion:general",
   )
 
-  testImplementation 'org.springframework.boot:spring-boot-starter-test'
+  testImplementation ('org.springframework.boot:spring-boot-starter-test') {
+    exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+  }
   testImplementation 'io.projectreactor:reactor-test'
 }
 
-tasks.named('test') {
+tasks.withType(Test).configureEach {
+  jacoco {
+    enabled = true
+  }
   useJUnitPlatform {
     excludeEngines('junit-vintage')
   }
-  maxHeapSize = '1G'
   systemProperties['junit.jupiter.execution.parallel.enabled'] = true
   systemProperties['junit.jupiter.execution.parallel.mode.default'] = 'same_thread'
   systemProperties['junit.jupiter.execution.parallel.mode.classes.default'] = 'concurrent'
-  maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+  maxParallelForks = ((Integer) Runtime.runtime.availableProcessors()).intdiv(2) ?: 1
+  finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+  dependsOn test
+  reports {
+    xml.required = true
+    csv.required = true
+    html.outputLocation = layout.buildDirectory.dir('reports/jacocoHtml')
+  }
 }
