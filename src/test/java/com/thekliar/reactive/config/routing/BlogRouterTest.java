@@ -44,6 +44,21 @@ class BlogRouterTest {
   }
 
   @Test
+  void whenGetInvalidBlogById_thenNotFound() {
+
+    BooleanExpression eq = QBlog.blog.id.eq("1");
+    given(blogRepository.findOne(eq)).willReturn(Mono.empty());
+
+    client.get()
+        .uri("/blogs/1")
+        .exchange()
+        .expectStatus()
+        .isNotFound();
+
+    then(blogRepository).should().findOne(eq);
+  }
+
+  @Test
   void givenBlogId_whenGetBlogById_thenCorrectBlog() {
 
     Blog blog = Blog.builder()
