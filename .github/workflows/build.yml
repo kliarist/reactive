@@ -1,5 +1,6 @@
-name: Run Gradle on PRs
-on: pull_request
+name: "Build on push and PRs"
+on: [push, pull_request]
+
 jobs:
   gradle:
     strategy:
