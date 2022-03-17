@@ -46,7 +46,7 @@ tasks.named('test') {
   }
   maxHeapSize = '1G'
   systemProperties['junit.jupiter.execution.parallel.enabled'] = true
-  systemProperties['junit.jupiter.execution.parallel.mode.default'] = 'concurrent'
+  systemProperties['junit.jupiter.execution.parallel.mode.default'] = 'same_thread'
   systemProperties['junit.jupiter.execution.parallel.mode.classes.default'] = 'concurrent'
   maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
 }
