@@ -32,6 +32,7 @@ jobs:
   sonarqube:
     name: Static Analysis
     runs-on: ubuntu-20.04
+    needs: build
     steps:
       - name: Cache SonarCloud packages
         uses: actions/cache@v1
@@ -48,6 +49,7 @@ jobs:
   jacoco:
     name: Code Coverage
     runs-on: ubuntu-20.04
+    needs: build
     steps:
       - name: Add coverage to PR
         uses: madrapps/jacoco-report@v1.2
