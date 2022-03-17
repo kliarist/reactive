@@ -3,6 +3,7 @@ plugins {
   id 'io.spring.dependency-management' version '1.0.11.RELEASE'
   id 'java'
   id 'jacoco'
+  id 'checkstyle'
   id 'com.palantir.git-version' version '0.13.0'
 }
 
@@ -64,4 +65,14 @@ jacocoTestReport {
     csv.required = true
     html.outputLocation = layout.buildDirectory.dir('reports/jacocoHtml')
   }
+}
+
+// Set the below to SKIP checkstyle by default
+//project.tasks.checkstyleMain.enabled = false
+//project.tasks.checkstyleTest.enabled = false
+
+checkstyle {
+  toolVersion = "9.3"
+  // To checkstyle only main and not test uncomment below
+  // sourceSets = [project.sourceSets.main]
 }
