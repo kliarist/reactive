@@ -50,11 +50,13 @@ dependencies {
 }
 
 tasks.withType(Test).configureEach {
+  String etags = project.hasProperty("excludeTags") ? project.property("excludeTags") : '_ignored_'
   jacoco {
     enabled = true
   }
   useJUnitPlatform {
     excludeEngines('junit-vintage')
+    excludeTags etags
   }
   systemProperties['junit.jupiter.execution.parallel.enabled'] = true
   systemProperties['junit.jupiter.execution.parallel.mode.default'] = 'same_thread'
