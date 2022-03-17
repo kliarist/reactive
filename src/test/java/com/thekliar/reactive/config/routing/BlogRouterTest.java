@@ -2,7 +2,7 @@ package com.thekliar.reactive.config.routing;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-
+import java.util.List;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.thekliar.reactive.handler.BlogHandler;
 import com.thekliar.reactive.model.Blog;
@@ -20,8 +20,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.List;
 
 @WebFluxTest
 @ContextConfiguration(classes = {BlogRouter.class, BlogHandler.class})

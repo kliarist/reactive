@@ -2,13 +2,15 @@ plugins {
   id 'org.springframework.boot' version '2.6.4'
   id 'io.spring.dependency-management' version '1.0.11.RELEASE'
   id 'java'
+  id 'jacoco'
+  id 'checkstyle'
   id 'com.palantir.git-version' version '0.13.0'
 }
 
 group = 'com.thekliar'
 version = gitVersion()
-sourceCompatibility = '11'
-targetCompatibility = '11'
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
 
 configurations {
   compileOnly {
@@ -36,14 +38,41 @@ dependencies {
       "com.querydsl:querydsl-apt:$queryDslVersion:general",
   )
 
-  testImplementation 'org.springframework.boot:spring-boot-starter-test'
+  testImplementation ('org.springframework.boot:spring-boot-starter-test') {
+    exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+  }
   testImplementation 'io.projectreactor:reactor-test'
 }
 
-tasks.named('test') {
-  useJUnitPlatform(){
+tasks.withType(Test).configureEach {
+  jacoco {
+    enabled = true
+  }
+  useJUnitPlatform {
     excludeEngines('junit-vintage')
   }
-  maxHeapSize = '1G'
+  systemProperties['junit.jupiter.execution.parallel.enabled'] = true
+  systemProperties['junit.jupiter.execution.parallel.mode.default'] = 'same_thread'
+  systemProperties['junit.jupiter.execution.parallel.mode.classes.default'] = 'concurrent'
+  maxParallelForks = ((Integer) Runtime.runtime.availableProcessors()).intdiv(2) ?: 1
+  finalizedBy jacocoTestReport
+}
 
+jacocoTestReport {
+  dependsOn test
+  reports {
+    xml.required = true
+    csv.required = true
+    html.outputLocation = layout.buildDirectory.dir('reports/jacocoHtml')
+  }
+}
+
+// Set the below to SKIP checkstyle by default
+//project.tasks.checkstyleMain.enabled = false
+//project.tasks.checkstyleTest.enabled = false
+
+checkstyle {
+  toolVersion = "9.3"
+  // To checkstyle only main and not test uncomment below
+  // sourceSets = [project.sourceSets.main]
 }
