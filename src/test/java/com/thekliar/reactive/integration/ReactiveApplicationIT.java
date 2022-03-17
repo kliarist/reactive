@@ -1,5 +1,6 @@
 package com.thekliar.reactive.integration;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +16,7 @@ import org.testcontainers.utility.DockerImageName;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
 @DirtiesContext
+@Tag("docker")
 public class ReactiveApplicationIT {
   private static final DockerImageName DOCKER_IMAGE_NAME = DockerImageName.parse("mongo:latest");
 

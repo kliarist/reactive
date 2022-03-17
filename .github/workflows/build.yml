@@ -26,8 +26,12 @@ jobs:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
-      - name: Build
+      - name: Build with Integration test
+        if: matrix.os == 'ubuntu-latest'
         run: ./gradlew build
+      - name: Build without Integration test
+        if: matrix.os != 'ubuntu-latest'
+        run: ./gradlew build -PexcludeTags='docker'
 
       - name: Cache SonarCloud packages
         uses: actions/cache@v1
