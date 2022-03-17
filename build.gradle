@@ -4,6 +4,7 @@ plugins {
   id 'java'
   id 'jacoco'
   id 'checkstyle'
+  id "org.sonarqube" version "3.3"
   id 'com.palantir.git-version' version '0.13.0'
 }
 
@@ -75,4 +76,12 @@ checkstyle {
   toolVersion = "9.3"
   // To checkstyle only main and not test uncomment below
   // sourceSets = [project.sourceSets.main]
+}
+
+sonarqube {
+  properties {
+    property "sonar.projectKey", "kliarist_reactive"
+    property "sonar.organization", "reactive"
+    property "sonar.host.url", "https://sonarcloud.io"
+  }
 }
