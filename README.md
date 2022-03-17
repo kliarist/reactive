@@ -1,3 +1,5 @@
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=reactive&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=kliarist_reactive)
+
 ### SpringBoot POC using:
 * Reactive Functions
 * MongoDB
@@ -21,3 +23,7 @@ For local development start Mongo using `docker-compose up -d reactive-mongo` an
 
 After you have Dockerised the `reactive-server` you can run in Docker using `docker-compose up 
 -d reactive-mongo` and `docker-compose up -d reactive-server`.
+
+### Useful links
+
+
