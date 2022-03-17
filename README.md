@@ -1,3 +1,4 @@
+![build.yml](https://github.com/kliarist/reactive/actions/workflows/build.yml/badge.svg?branch=main)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=reactive&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=kliarist_reactive)
 
 ### SpringBoot POC using:
@@ -25,5 +26,10 @@ After you have Dockerised the `reactive-server` you can run in Docker using `doc
 -d reactive-mongo` and `docker-compose up -d reactive-server`.
 
 ### Useful links
+
+✔ [Sonarcloud](https://sonarcloud.io/project/overview?id=reactive)
+
+✔ [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
+
 
 
