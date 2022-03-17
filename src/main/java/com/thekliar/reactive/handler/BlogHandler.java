@@ -25,9 +25,9 @@ public class BlogHandler {
   }
 
   public Mono<ServerResponse> findById(ServerRequest request) {
-    String id = request.pathVariable(ID);
-    Mono<Blog> monoBlog = blogRepository.findOne(QBlog.blog.id.eq(id));
-    return ok().body(monoBlog, Blog.class);
+    return blogRepository.findOne(QBlog.blog.id.eq(request.pathVariable(ID)))
+        .flatMap(blog -> ServerResponse.ok().bodyValue(blog))
+        .switchIfEmpty(Mono.defer(() -> ServerResponse.notFound().build()));
   }
 
   @SuppressWarnings("unused")
