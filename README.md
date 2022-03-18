@@ -12,6 +12,34 @@ A SpringBoot POC using:
 
 ## Getting Started
 
+### Code style
+
+All developers should import and use [checkstyle.xml](config/checkstyle/checkstyle.xml) code style 
+to their IDE. For Intellij it can be imported using the [CheckStyle-IDEA](https://plugins.jetbrains.com/plugin/1065-checkstyle-idea) plugin. 
+
+### Git setup
+
+The project is using Git.
+
+After cloning the project navigate to the root directory of the project and execute (if you havent
+done so):
+
+```
+git config user.name "FIRST_NAME LAST_NAME"
+git config user.email "MY_NAME@example.com"
+```
+
+also PLEASE install commit-msg hook:
+
+```
+git config core.hooksPath .githooks
+```
+
+This will handle the consistency across commit messages. 
+
+The git commit standard followed is [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) 
+
+
 ### Build
 Build using `./gradlew clean build`.
 
