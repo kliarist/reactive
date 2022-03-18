@@ -1,7 +1,9 @@
 package com.thekliar.reactive.handler;
 
 import static com.thekliar.reactive.config.AppConstants.ID;
+import static org.springframework.web.reactive.function.server.ServerResponse.created;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
+import java.net.URI;
 import com.thekliar.reactive.model.Blog;
 import com.thekliar.reactive.model.QBlog;
 import com.thekliar.reactive.repository.BlogRepository;
@@ -21,7 +23,7 @@ public class BlogHandler {
     return request
         .bodyToMono(Blog.class)
         .flatMap(blogRepository::insert)
-        .then(ok().build());
+        .flatMap(blog -> created(URI.create("/blogs/".concat(blog.getId()))).build());
   }
 
   public Mono<ServerResponse> findById(ServerRequest request) {
