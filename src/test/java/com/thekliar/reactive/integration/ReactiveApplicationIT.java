@@ -30,7 +30,6 @@ public class ReactiveApplicationIT {
   @DynamicPropertySource
   public static void properties(DynamicPropertyRegistry registry) {
     registry.add("spring.data.mongodb.uri", mongodb::getReplicaSetUrl);
-    registry.add("spring.jpa.hibernate.ddl-auto", () -> "update");
   }
 
   @Test
