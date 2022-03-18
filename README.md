@@ -3,8 +3,8 @@
 
 # Reactive
 
-## A SpringBoot POC using:
-
+## Description
+A SpringBoot POC using:
 * Reactive Functions
 * MongoDB
 * Reactive repositories  
