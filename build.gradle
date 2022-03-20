@@ -28,6 +28,8 @@ dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-webflux'
   implementation 'org.apache.kafka:kafka-streams'
 
+  implementation "org.mapstruct:mapstruct:$mapstructVersion"
+
   implementation ("com.querydsl:querydsl-mongodb") {
     exclude group: 'org.mongodb'
   }
@@ -37,6 +39,7 @@ dependencies {
   annotationProcessor(
       'org.projectlombok:lombok',
       "com.querydsl:querydsl-apt:$queryDslVersion:general",
+      "org.mapstruct:mapstruct-processor:$mapstructVersion",
   )
 
   testImplementation ('org.springframework.boot:spring-boot-starter-test') {
