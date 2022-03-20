@@ -1,14 +1,14 @@
 package com.thekliar.reactive.config.routing;
 
+import static com.thekliar.reactive.utils.BlogUtils.createBlogDTO;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import java.util.List;
-import com.querydsl.core.types.dsl.BooleanExpression;
+
+import com.thekliar.reactive.dto.BlogDTO;
 import com.thekliar.reactive.handler.BlogHandler;
 import com.thekliar.reactive.model.Blog;
-import com.thekliar.reactive.model.QBlog;
-import com.thekliar.reactive.repository.BlogRepository;
 import com.thekliar.reactive.routing.BlogRouter;
+import com.thekliar.reactive.service.BlogService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,17 +21,22 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+import java.util.UUID;
+
 @WebFluxTest
 @ContextConfiguration(classes = {BlogRouter.class, BlogHandler.class})
 class BlogRouterTest {
 
   @Autowired
   ApplicationContext context;
-
   @MockBean
-  BlogRepository blogRepository;
-
+  BlogService blogService;
   WebTestClient client;
+
+  private final String title = "BlogTitle";
+  private final String content = "This is the content of the blog";
+  private final String author = "author";
 
   @BeforeEach
   void setUp() {
@@ -40,113 +45,115 @@ class BlogRouterTest {
 
   @AfterEach
   void tearDown() {
-    then(blogRepository).shouldHaveNoMoreInteractions();
+    then(blogService).shouldHaveNoMoreInteractions();
   }
 
   @Test
-  void whenGetInvalidBlogById_thenNotFound() {
+  void givenInvalidBlogId_whenGetBlogById_thenNotFound() {
+    String id = UUID.randomUUID().toString();
 
-    BooleanExpression eq = QBlog.blog.id.eq("1");
-    given(blogRepository.findOne(eq)).willReturn(Mono.empty());
+    given(blogService.findById(id)).willReturn(Mono.empty());
 
     client.get()
-        .uri("/blogs/1")
+        .uri("/blogs/{id}", id)
         .exchange()
         .expectStatus()
         .isNotFound();
 
-    then(blogRepository).should().findOne(eq);
+    then(blogService).should().findById(id);
   }
 
   @Test
   void givenBlogId_whenGetBlogById_thenCorrectBlog() {
+    String id = UUID.randomUUID().toString();
+    BlogDTO dto = createBlogDTO(id, title, content, author);
 
-    Blog blog = Blog.builder()
-        .id("1")
-        .title("Blog1Title")
-        .content("This is the content of the blog")
-        .author("theo").build();
-
-    BooleanExpression eq = QBlog.blog.id.eq(blog.getId());
-    given(blogRepository.findOne(eq)).willReturn(Mono.just(blog));
+    given(blogService.findById(id)).willReturn(Mono.just(dto));
 
     client.get()
-        .uri("/blogs/1")
+        .uri("/blogs/{id}", id)
         .exchange()
         .expectStatus()
         .isOk()
-        .expectBody(Blog.class)
-        .isEqualTo(blog);
+        .expectBody(BlogDTO.class)
+        .isEqualTo(dto);
 
-    then(blogRepository).should().findOne(eq);
+    then(blogService).should().findById(id);
   }
 
   @Test
   void whenGetAllBlogs_thenCorrectBlogs() {
-    List<Blog> employees = List.of(
-        Blog.builder()
-            .id("1")
-            .title("Blog1Title")
-            .content("This is the content of the blog1")
-            .author("theo").build(),
-        Blog.builder()
-            .id("2")
-            .title("Blog2Title")
-            .content("This is the content of the blog2")
-            .author("theo").build());
+    String id = UUID.randomUUID().toString();
 
-    Flux<Blog> employeeFlux = Flux.fromIterable(employees);
-    given(blogRepository.findAll()).willReturn(employeeFlux);
+    BlogDTO dto1 = createBlogDTO(id, title, content, author);
+    BlogDTO dto2 = createBlogDTO(id, title, content, author);
+    List<BlogDTO> dtos = List.of(dto1, dto2);
+    Flux<BlogDTO> dtoFlux = Flux.fromIterable(dtos);
+
+    given(blogService.findAll()).willReturn(dtoFlux);
 
     client.get()
         .uri("/blogs")
         .exchange()
         .expectStatus()
         .isOk()
-        .expectBodyList(Blog.class)
-        .isEqualTo(employees);
+        .expectBodyList(BlogDTO.class)
+        .isEqualTo(dtos);
 
-    then(blogRepository).should().findAll();
+    then(blogService).should().findAll();
+  }
+
+  @Test
+  void whenInsertNewBlog_thenBlogInserted() {
+    String id = UUID.randomUUID().toString();
+    BlogDTO dto = createBlogDTO(null, title, content, author);
+    BlogDTO dtoSaved = createBlogDTO(id, title, content, author);
+
+    given(blogService.save(dto)).willReturn(Mono.just(dtoSaved));
+
+    client.post()
+        .uri("/blogs")
+        .body(Mono.just(dto), Blog.class)
+        .exchange()
+        .expectStatus()
+        .isCreated()
+        .expectHeader().location("/blogs/" + id);
+
+    then(blogService).should().save(dto);
   }
 
   @Test
   void whenUpdateBlog_thenBlogUpdated() {
-    Blog blog = Blog.builder()
-        .id("1")
-        .title("Blog1Title")
-        .content("This is the content of the blog")
-        .author("theo").build();
+    String id = UUID.randomUUID().toString();
 
-    given(blogRepository.insert(blog)).willReturn(Mono.just(blog));
+    BlogDTO dto = createBlogDTO(id, title, content, author);
+
+    given(blogService.save(dto)).willReturn(Mono.just(dto));
 
     client.post()
         .uri("/blogs")
-        .body(Mono.just(blog), Blog.class)
+        .body(Mono.just(dto), Blog.class)
         .exchange()
         .expectStatus()
-        .isCreated()
-        .expectHeader().location("/blogs/1");
+        .isOk()
+        .expectHeader().location("/blogs/" + id);
 
-    then(blogRepository).should().insert(blog);
+    then(blogService).should().save(dto);
   }
 
   @Test
   void whenDeleteBlog_thenBlogDeleted() {
-    Blog blog = Blog.builder()
-        .id("1")
-        .title("Blog1Title")
-        .content("This is the content of the blog")
-        .author("theo").build();
+    String id = UUID.randomUUID().toString();
 
-    given(blogRepository.deleteById(blog.getId())).willReturn(Mono.empty());
+    given(blogService.deleteById(id)).willReturn(Mono.empty());
 
     client.delete()
-        .uri("/blogs/1")
+        .uri("/blogs/" + id)
         .exchange()
         .expectStatus()
         .isOk();
 
-    then(blogRepository).should().deleteById(blog.getId());
+    then(blogService).should().deleteById(id);
   }
 
 }
