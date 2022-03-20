@@ -10,3 +10,5 @@ spring:
       password: S3cret
       database: reactive-boot
       authentication-database: admin
+  jackson:
+    default-property-inclusion: non_null
