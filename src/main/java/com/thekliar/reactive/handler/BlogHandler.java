@@ -1,14 +1,17 @@
 package com.thekliar.reactive.handler;
 
 import static com.thekliar.reactive.config.AppConstants.ID;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 import com.thekliar.reactive.dto.BlogDTO;
 import com.thekliar.reactive.service.BlogService;
+import com.thekliar.reactive.validator.ValidationHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.Errors;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
@@ -17,23 +20,36 @@ import java.net.URI;
 
 @Component
 @RequiredArgsConstructor
-public class BlogHandler {
+public class BlogHandler extends ValidationHandler<BlogDTO> {
 
   private final BlogService blogService;
 
   public Mono<ServerResponse> save(ServerRequest request) {
 
-    boolean[] isUpdate = new boolean[1];
-    return request
-        .bodyToMono(BlogDTO.class)
-        .doOnNext(blogDTO -> isUpdate[0] = blogDTO.getId() != null)
-        .flatMap(blogService::save)
-        .flatMap(dto -> ServerResponse
-            .status(isUpdate[0] ? OK : CREATED)
-            .location(URI.create("/blogs/" + dto.getId()))
+    return request.bodyToMono(BlogDTO.class).flatMap(dto -> {
+      Errors errors = this.validate(dto);
+      if (errors.hasErrors()) {
+        return onValidationErrors(errors);
+      } else {
+        return processBody(dto);
+      }
+    });
+  }
+
+  private Mono<ServerResponse> processBody(BlogDTO dto) {
+    boolean isUpdate = dto.getId() != null;
+
+    return blogService.save(dto)
+        .flatMap(savedDTO -> ServerResponse
+            .status(isUpdate ? OK : CREATED)
+            .location(URI.create("/blogs/" + savedDTO.getId()))
             .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(dto)
+            .bodyValue(savedDTO)
         );
+  }
+
+  private Mono<ServerResponse> onValidationErrors(Errors errors) {
+    return ServerResponse.status(BAD_REQUEST).bodyValue(errors.getAllErrors());
   }
 
   public Mono<ServerResponse> findById(ServerRequest request) {

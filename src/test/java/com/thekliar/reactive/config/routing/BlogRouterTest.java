@@ -156,4 +156,17 @@ class BlogRouterTest {
     then(blogService).should().deleteById(id);
   }
 
+  @Test
+  void whenInsertNewBlog_thenValidationErrors() {
+    BlogDTO dto = createBlogDTO(null, null, null, null);
+
+    client.post()
+        .uri("/blogs")
+        .body(Mono.just(dto), Blog.class)
+        .exchange()
+        .expectStatus()
+        .isBadRequest();
+
+  }
+
 }
