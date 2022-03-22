@@ -7,7 +7,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willDoNothing;
-
+import java.util.List;
+import java.util.UUID;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.thekliar.reactive.dto.BlogDto;
 import com.thekliar.reactive.mapper.BlogMapper;
@@ -24,22 +25,18 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.util.List;
-import java.util.UUID;
-
 @ExtendWith(MockitoExtension.class)
 class BlogServiceTest {
 
+  private final String title = "BlogTitle";
+  private final String content = "This is the content of the blog";
+  private final String author = "author";
   @InjectMocks
   BlogService service;
   @Mock
   BlogRepository blogRepository;
   @Mock
   BlogMapper blogMapper;
-
-  private final String title = "BlogTitle";
-  private final String content = "This is the content of the blog";
-  private final String author = "author";
 
   @AfterEach
   void tearDown() {

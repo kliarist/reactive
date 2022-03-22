@@ -18,6 +18,7 @@ import org.testcontainers.utility.DockerImageName;
 @DirtiesContext
 @Tag("docker")
 public class ReactiveApplicationIT {
+
   private static final DockerImageName DOCKER_IMAGE_NAME = DockerImageName.parse("mongo:latest");
 
   @Container

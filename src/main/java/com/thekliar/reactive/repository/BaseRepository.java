@@ -8,4 +8,6 @@ import org.springframework.data.repository.NoRepositoryBean;
 @NoRepositoryBean
 public interface BaseRepository<D extends BaseDocument>
     extends ReactiveMongoRepository<D, String>,
-    ReactiveQuerydslPredicateExecutor<D> {}
+    ReactiveQuerydslPredicateExecutor<D> {
+
+}

@@ -3,7 +3,8 @@ package com.thekliar.reactive.config.routing;
 import static com.thekliar.reactive.utils.BlogUtils.createBlogDto;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-
+import java.util.List;
+import java.util.UUID;
 import com.thekliar.reactive.dto.BlogDto;
 import com.thekliar.reactive.handler.BlogHandler;
 import com.thekliar.reactive.model.Blog;
@@ -21,22 +22,18 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
-import java.util.UUID;
-
 @WebFluxTest
 @ContextConfiguration(classes = {BlogRouter.class, BlogHandler.class})
 class BlogRouterTest {
 
+  private final String title = "BlogTitle";
+  private final String content = "This is the content of the blog";
+  private final String author = "author";
   @Autowired
   ApplicationContext context;
   @MockBean
   BlogService blogService;
   WebTestClient client;
-
-  private final String title = "BlogTitle";
-  private final String content = "This is the content of the blog";
-  private final String author = "author";
 
   @BeforeEach
   void setUp() {

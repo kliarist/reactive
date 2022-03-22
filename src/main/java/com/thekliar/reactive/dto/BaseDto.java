@@ -1,12 +1,11 @@
 package com.thekliar.reactive.dto;
 
+import java.io.Serializable;
+import java.time.Instant;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import lombok.Data;
 import lombok.experimental.Accessors;
-
-import java.time.Instant;
-import java.io.Serializable;
 
 @Data
 @Accessors(chain = true)
