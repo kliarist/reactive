@@ -107,7 +107,7 @@ class BlogServiceTest {
     Blog blog = createBlog(blogId, title, content, author);
 
     given(blogMapper.toDocument(dto)).willReturn(blog);
-    given(blogRepository.insert(blog)).willReturn(Mono.just(blog));
+    given(blogRepository.save(blog)).willReturn(Mono.just(blog));
     given(blogMapper.toDto(blog)).willReturn(dto);
 
     StepVerifier.create(service.save(dto))
@@ -115,7 +115,7 @@ class BlogServiceTest {
         .verifyComplete();
 
     then(blogMapper).should().toDocument(dto);
-    then(blogRepository).should().insert(any(Blog.class));
+    then(blogRepository).should().save(any(Blog.class));
     then(blogMapper).should().toDto(blog);
   }
 
@@ -128,7 +128,7 @@ class BlogServiceTest {
 
     given(blogRepository.findById(blogId)).willReturn(Mono.just(blog));
     willDoNothing().given(blogMapper).map(dto, blog);
-    given(blogRepository.insert(blog)).willReturn(Mono.just(blog));
+    given(blogRepository.save(blog)).willReturn(Mono.just(blog));
     given(blogMapper.toDto(blog)).willReturn(dto);
 
     StepVerifier.create(service.save(dto))
@@ -137,7 +137,7 @@ class BlogServiceTest {
 
     then(blogRepository).should().findById(blogId);
     then(blogMapper).should().map(dto, blog);
-    then(blogRepository).should().insert(any(Blog.class));
+    then(blogRepository).should().save(any(Blog.class));
     then(blogMapper).should().toDto(blog);
   }
 }

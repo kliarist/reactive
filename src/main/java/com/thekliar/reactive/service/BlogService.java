@@ -30,7 +30,7 @@ public class BlogService {
       monoBlog = Mono.just(blogMapper.toDocument(dto));
     }
     return monoBlog
-        .flatMap(blogRepository::insert)
+        .flatMap(blogRepository::save)
         .map(blogMapper::toDto);
   }
 
