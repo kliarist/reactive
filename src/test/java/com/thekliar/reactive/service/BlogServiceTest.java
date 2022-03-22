@@ -1,7 +1,7 @@
 package com.thekliar.reactive.service;
 
 import static com.thekliar.reactive.utils.BlogUtils.createBlog;
-import static com.thekliar.reactive.utils.BlogUtils.createBlogDTO;
+import static com.thekliar.reactive.utils.BlogUtils.createBlogDto;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -9,7 +9,7 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willDoNothing;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.thekliar.reactive.dto.BlogDTO;
+import com.thekliar.reactive.dto.BlogDto;
 import com.thekliar.reactive.mapper.BlogMapper;
 import com.thekliar.reactive.model.Blog;
 import com.thekliar.reactive.model.QBlog;
@@ -66,21 +66,21 @@ class BlogServiceTest {
     List<Blog> blogs = List.of(blog1, blog2);
     Flux<Blog> blogFlux = Flux.fromIterable(blogs);
 
-    BlogDTO dto1 = createBlogDTO(id1, title, content, author);
-    BlogDTO dto2 = createBlogDTO(id1, title, content, author);
-    List<BlogDTO> blogDTOs = List.of(dto1, dto2);
-    Flux<BlogDTO> blogDTOFlux = Flux.fromIterable(blogDTOs);
+    BlogDto dto1 = createBlogDto(id1, title, content, author);
+    BlogDto dto2 = createBlogDto(id1, title, content, author);
+    List<BlogDto> blogDtos = List.of(dto1, dto2);
+    Flux<BlogDto> blogDtoFlux = Flux.fromIterable(blogDtos);
 
     given(blogRepository.findAll()).willReturn(blogFlux);
-    given(blogMapper.toDTOs(blogFlux)).willReturn(blogDTOFlux);
+    given(blogMapper.toDtos(blogFlux)).willReturn(blogDtoFlux);
 
-    Flux<BlogDTO> actual = service.findAll();
+    Flux<BlogDto> actual = service.findAll();
     actual.subscribe();
 
-    assertEquals(blogDTOFlux, actual);
+    assertEquals(blogDtoFlux, actual);
 
     then(blogRepository).should().findAll();
-    then(blogMapper).should().toDTOs(blogFlux);
+    then(blogMapper).should().toDtos(blogFlux);
   }
 
   @Test
@@ -88,30 +88,30 @@ class BlogServiceTest {
 
     String id = UUID.randomUUID().toString();
     Blog blog = createBlog(id, title, content, author);
-    BlogDTO dto = createBlogDTO(id, title, content, author);
+    BlogDto dto = createBlogDto(id, title, content, author);
     BooleanExpression predicate = QBlog.blog.id.eq(id);
 
     given(blogRepository.findOne(predicate)).willReturn(Mono.just(blog));
-    given(blogMapper.toDTO(blog)).willReturn(dto);
+    given(blogMapper.toDto(blog)).willReturn(dto);
 
     StepVerifier.create(service.findById(id))
         .assertNext(actual -> assertEquals(dto, actual))
         .verifyComplete();
 
     then(blogRepository).should().findOne(predicate);
-    then(blogMapper).should().toDTO(blog);
+    then(blogMapper).should().toDto(blog);
   }
 
   @Test
   void whenInsertNewBlog_thenBlogInserted() {
     String blogId = UUID.randomUUID().toString();
 
-    BlogDTO dto = createBlogDTO(null, title, content, author);
+    BlogDto dto = createBlogDto(null, title, content, author);
     Blog blog = createBlog(blogId, title, content, author);
 
     given(blogMapper.toDocument(dto)).willReturn(blog);
     given(blogRepository.insert(blog)).willReturn(Mono.just(blog));
-    given(blogMapper.toDTO(blog)).willReturn(dto);
+    given(blogMapper.toDto(blog)).willReturn(dto);
 
     StepVerifier.create(service.save(dto))
         .assertNext(actual -> assertEquals(dto, actual))
@@ -119,20 +119,20 @@ class BlogServiceTest {
 
     then(blogMapper).should().toDocument(dto);
     then(blogRepository).should().insert(any(Blog.class));
-    then(blogMapper).should().toDTO(blog);
+    then(blogMapper).should().toDto(blog);
   }
 
   @Test
   void whenUpdateBlog_thenBlogUpdated() {
     String blogId = UUID.randomUUID().toString();
 
-    BlogDTO dto = createBlogDTO(blogId, title, content, author);
+    BlogDto dto = createBlogDto(blogId, title, content, author);
     Blog blog = createBlog(blogId, title, content, author);
 
     given(blogRepository.findById(blogId)).willReturn(Mono.just(blog));
     willDoNothing().given(blogMapper).map(dto, blog);
     given(blogRepository.insert(blog)).willReturn(Mono.just(blog));
-    given(blogMapper.toDTO(blog)).willReturn(dto);
+    given(blogMapper.toDto(blog)).willReturn(dto);
 
     StepVerifier.create(service.save(dto))
         .assertNext(actual -> assertEquals(dto, actual))
@@ -141,6 +141,6 @@ class BlogServiceTest {
     then(blogRepository).should().findById(blogId);
     then(blogMapper).should().map(dto, blog);
     then(blogRepository).should().insert(any(Blog.class));
-    then(blogMapper).should().toDTO(blog);
+    then(blogMapper).should().toDto(blog);
   }
 }

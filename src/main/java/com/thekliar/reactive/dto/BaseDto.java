@@ -5,12 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.io.Serializable;
 import java.time.Instant;
+import java.io.Serializable;
 
 @Data
 @Accessors(chain = true)
-public abstract class BaseDTO implements Serializable {
+public abstract class BaseDto implements Serializable {
 
   private String id;
 

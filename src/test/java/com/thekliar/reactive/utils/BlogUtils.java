@@ -1,6 +1,6 @@
 package com.thekliar.reactive.utils;
 
-import com.thekliar.reactive.dto.BlogDTO;
+import com.thekliar.reactive.dto.BlogDto;
 import com.thekliar.reactive.model.Blog;
 
 public final class BlogUtils {
@@ -11,8 +11,8 @@ public final class BlogUtils {
     return blog;
   }
 
-  public static BlogDTO createBlogDTO(String id, String title, String content, String author) {
-    BlogDTO blogDto = new BlogDTO();
+  public static BlogDto createBlogDto(String id, String title, String content, String author) {
+    BlogDto blogDto = new BlogDto();
     blogDto.setTitle(title).setContent(content).setAuthor(author).setId(id);
     return blogDto;
   }

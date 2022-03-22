@@ -1,10 +1,10 @@
 package com.thekliar.reactive.config.routing;
 
-import static com.thekliar.reactive.utils.BlogUtils.createBlogDTO;
+import static com.thekliar.reactive.utils.BlogUtils.createBlogDto;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
-import com.thekliar.reactive.dto.BlogDTO;
+import com.thekliar.reactive.dto.BlogDto;
 import com.thekliar.reactive.handler.BlogHandler;
 import com.thekliar.reactive.model.Blog;
 import com.thekliar.reactive.routing.BlogRouter;
@@ -66,7 +66,7 @@ class BlogRouterTest {
   @Test
   void givenBlogId_whenGetBlogById_thenCorrectBlog() {
     String id = UUID.randomUUID().toString();
-    BlogDTO dto = createBlogDTO(id, title, content, author);
+    BlogDto dto = createBlogDto(id, title, content, author);
 
     given(blogService.findById(id)).willReturn(Mono.just(dto));
 
@@ -75,7 +75,7 @@ class BlogRouterTest {
         .exchange()
         .expectStatus()
         .isOk()
-        .expectBody(BlogDTO.class)
+        .expectBody(BlogDto.class)
         .isEqualTo(dto);
 
     then(blogService).should().findById(id);
@@ -85,10 +85,10 @@ class BlogRouterTest {
   void whenGetAllBlogs_thenCorrectBlogs() {
     String id = UUID.randomUUID().toString();
 
-    BlogDTO dto1 = createBlogDTO(id, title, content, author);
-    BlogDTO dto2 = createBlogDTO(id, title, content, author);
-    List<BlogDTO> dtos = List.of(dto1, dto2);
-    Flux<BlogDTO> dtoFlux = Flux.fromIterable(dtos);
+    BlogDto dto1 = createBlogDto(id, title, content, author);
+    BlogDto dto2 = createBlogDto(id, title, content, author);
+    List<BlogDto> dtos = List.of(dto1, dto2);
+    Flux<BlogDto> dtoFlux = Flux.fromIterable(dtos);
 
     given(blogService.findAll()).willReturn(dtoFlux);
 
@@ -97,7 +97,7 @@ class BlogRouterTest {
         .exchange()
         .expectStatus()
         .isOk()
-        .expectBodyList(BlogDTO.class)
+        .expectBodyList(BlogDto.class)
         .isEqualTo(dtos);
 
     then(blogService).should().findAll();
@@ -106,8 +106,8 @@ class BlogRouterTest {
   @Test
   void whenInsertNewBlog_thenBlogInserted() {
     String id = UUID.randomUUID().toString();
-    BlogDTO dto = createBlogDTO(null, title, content, author);
-    BlogDTO dtoSaved = createBlogDTO(id, title, content, author);
+    BlogDto dto = createBlogDto(null, title, content, author);
+    BlogDto dtoSaved = createBlogDto(id, title, content, author);
 
     given(blogService.save(dto)).willReturn(Mono.just(dtoSaved));
 
@@ -126,7 +126,7 @@ class BlogRouterTest {
   void whenUpdateBlog_thenBlogUpdated() {
     String id = UUID.randomUUID().toString();
 
-    BlogDTO dto = createBlogDTO(id, title, content, author);
+    BlogDto dto = createBlogDto(id, title, content, author);
 
     given(blogService.save(dto)).willReturn(Mono.just(dto));
 
@@ -158,7 +158,7 @@ class BlogRouterTest {
 
   @Test
   void whenInsertNewBlog_thenValidationErrors() {
-    BlogDTO dto = createBlogDTO(null, null, null, null);
+    BlogDto dto = createBlogDto(null, null, null, null);
 
     client.post()
         .uri("/blogs")

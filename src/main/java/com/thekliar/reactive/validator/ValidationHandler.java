@@ -1,6 +1,6 @@
 package com.thekliar.reactive.validator;
 
-import com.thekliar.reactive.dto.BaseDTO;
+import com.thekliar.reactive.dto.BaseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
@@ -8,7 +8,7 @@ import org.springframework.validation.Validator;
 
 import java.lang.reflect.ParameterizedType;
 
-public class ValidationHandler<T extends BaseDTO> {
+public class ValidationHandler<T extends BaseDto> {
 
   @Autowired
   private Validator validator;

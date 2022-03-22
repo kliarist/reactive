@@ -5,7 +5,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
-import com.thekliar.reactive.dto.BlogDTO;
+import com.thekliar.reactive.dto.BlogDto;
 import com.thekliar.reactive.service.BlogService;
 import com.thekliar.reactive.validator.ValidationHandler;
 import lombok.RequiredArgsConstructor;
@@ -20,13 +20,13 @@ import java.net.URI;
 
 @Component
 @RequiredArgsConstructor
-public class BlogHandler extends ValidationHandler<BlogDTO> {
+public class BlogHandler extends ValidationHandler<BlogDto> {
 
   private final BlogService blogService;
 
   public Mono<ServerResponse> save(ServerRequest request) {
 
-    return request.bodyToMono(BlogDTO.class).flatMap(dto -> {
+    return request.bodyToMono(BlogDto.class).flatMap(dto -> {
       Errors errors = this.validate(dto);
       if (errors.hasErrors()) {
         return onValidationErrors(errors);
@@ -36,16 +36,12 @@ public class BlogHandler extends ValidationHandler<BlogDTO> {
     });
   }
 
-  private Mono<ServerResponse> processBody(BlogDTO dto) {
+  private Mono<ServerResponse> processBody(BlogDto dto) {
     boolean isUpdate = dto.getId() != null;
 
-    return blogService.save(dto)
-        .flatMap(savedDTO -> ServerResponse
-            .status(isUpdate ? OK : CREATED)
-            .location(URI.create("/blogs/" + savedDTO.getId()))
-            .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(savedDTO)
-        );
+    return blogService.save(dto).flatMap(savedDto -> ServerResponse.status(isUpdate ? OK : CREATED)
+        .location(URI.create("/blogs/" + savedDto.getId())).contentType(MediaType.APPLICATION_JSON)
+        .bodyValue(savedDto));
   }
 
   private Mono<ServerResponse> onValidationErrors(Errors errors) {
@@ -54,22 +50,15 @@ public class BlogHandler extends ValidationHandler<BlogDTO> {
 
   public Mono<ServerResponse> findById(ServerRequest request) {
     String id = request.pathVariable(ID);
-    return blogService
-        .findById(id)
-        .flatMap(dto -> ServerResponse
-            .ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(dto)
-        )
+    return blogService.findById(id)
+        .flatMap(dto -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(dto))
         .switchIfEmpty(ServerResponse.notFound().build());
   }
 
   @SuppressWarnings("unused")
   public Mono<ServerResponse> findAll(ServerRequest request) {
-    return ServerResponse
-        .ok()
-        .contentType(MediaType.APPLICATION_JSON)
-        .body(blogService.findAll(), BlogDTO.class);
+    return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)
+        .body(blogService.findAll(), BlogDto.class);
   }
 
   public Mono<ServerResponse> deleteById(ServerRequest request) {

@@ -8,7 +8,7 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = true)
-public class BlogDTO extends BaseDTO {
+public class BlogDto extends BaseDto {
 
   @NotEmpty
   private String title;

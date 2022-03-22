@@ -1,6 +1,6 @@
 package com.thekliar.reactive.service;
 
-import com.thekliar.reactive.dto.BlogDTO;
+import com.thekliar.reactive.dto.BlogDto;
 import com.thekliar.reactive.mapper.BlogMapper;
 import com.thekliar.reactive.model.Blog;
 import com.thekliar.reactive.model.QBlog;
@@ -17,7 +17,7 @@ public class BlogService {
   private final BlogRepository blogRepository;
   private final BlogMapper blogMapper;
 
-  public Mono<BlogDTO> save(BlogDTO dto) {
+  public Mono<BlogDto> save(BlogDto dto) {
     Mono<Blog> monoBlog;
     if (dto.getId() != null) {
       monoBlog = blogRepository
@@ -31,17 +31,17 @@ public class BlogService {
     }
     return monoBlog
         .flatMap(blogRepository::insert)
-        .map(blogMapper::toDTO);
+        .map(blogMapper::toDto);
   }
 
 
-  public Mono<BlogDTO> findById(String id) {
+  public Mono<BlogDto> findById(String id) {
     return blogRepository.findOne(QBlog.blog.id.eq(id))
-        .map(blogMapper::toDTO);
+        .map(blogMapper::toDto);
   }
 
-  public Flux<BlogDTO> findAll() {
-    return blogMapper.toDTOs(blogRepository.findAll());
+  public Flux<BlogDto> findAll() {
+    return blogMapper.toDtos(blogRepository.findAll());
   }
 
   public Mono<Void> deleteById(String id) {
