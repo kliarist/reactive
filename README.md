@@ -1,5 +1,5 @@
 ![build.yml](https://github.com/kliarist/reactive/actions/workflows/build.yml/badge.svg?branch=main)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=reactive&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=kliarist_reactive)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=reactive&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=reactive)
 
 # Reactive
 
