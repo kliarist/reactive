@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.UUID;
 import com.thekliar.reactive.dto.BlogDto;
 import com.thekliar.reactive.handler.BlogHandler;
+import com.thekliar.reactive.handler.ValidationHandler;
 import com.thekliar.reactive.model.Blog;
 import com.thekliar.reactive.routing.BlogRouter;
 import com.thekliar.reactive.service.BlogService;
@@ -23,7 +24,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @WebFluxTest
-@ContextConfiguration(classes = {BlogRouter.class, BlogHandler.class})
+@ContextConfiguration(classes = {BlogRouter.class, BlogHandler.class, ValidationHandler.class})
 class BlogRouterTest {
 
   private final String title = "BlogTitle";

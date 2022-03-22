@@ -7,7 +7,6 @@ import static org.springframework.http.HttpStatus.OK;
 import java.net.URI;
 import com.thekliar.reactive.dto.BlogDto;
 import com.thekliar.reactive.service.BlogService;
-import com.thekliar.reactive.validator.ValidationHandler;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -18,14 +17,15 @@ import reactor.core.publisher.Mono;
 
 @Component
 @RequiredArgsConstructor
-public class BlogHandler extends ValidationHandler<BlogDto> {
+public class BlogHandler {
 
   private final BlogService blogService;
+  private final ValidationHandler validator;
 
   public Mono<ServerResponse> save(ServerRequest request) {
 
     return request.bodyToMono(BlogDto.class).flatMap(dto -> {
-      Errors errors = this.validate(dto);
+      Errors errors = validator.validate(dto);
       if (errors.hasErrors()) {
         return onValidationErrors(errors);
       } else {
