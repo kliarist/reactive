@@ -76,6 +76,15 @@ jacocoTestReport {
     csv.required = true
     html.outputLocation = layout.buildDirectory.dir('reports/jacocoHtml')
   }
+
+  afterEvaluate {
+    classDirectories.setFrom(files(classDirectories.files.collect {
+      fileTree(dir: it, exclude: [
+          "com/thekliar/reactive/model/*",
+          "com/thekliar/reactive/dto/*"
+      ])
+    }))
+  }
 }
 
 // Set the below to SKIP checkstyle by default
@@ -93,6 +102,5 @@ sonarqube {
     property "sonar.projectKey", "reactive"
     property "sonar.organization", "reactive"
     property "sonar.host.url", "https://sonarcloud.io"
-    property 'sonar.coverage.exclusions', 'src/main/java/com/thekliar/reactive/model/*,src/main/java/com/thekliar/reactive/dto/**'
   }
 }
