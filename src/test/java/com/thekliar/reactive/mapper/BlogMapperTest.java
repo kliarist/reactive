@@ -26,7 +26,7 @@ class BlogMapperTest {
   private final String version = "0";
 
   @Test
-  void whenMapToDocument_DocumentMatches() {
+  void whenMapToDocument_thenDocumentMatches() {
     BlogDto blogDto = createBlogDto(id, title, content, author, now, now, auditUser, auditUser, version);
     Blog expected = createBlog(id, title, content, author);
 
@@ -36,7 +36,7 @@ class BlogMapperTest {
   }
 
   @Test
-  void whenMap_Matches() {
+  void whenMap_thenMatches() {
     BlogDto blogDto = createBlogDto(id, title, content, author, now, now, auditUser, auditUser, version);
     Blog actual = createBlog(null, null, null, null);
     Blog expected = createBlog(id, title, content, author);
@@ -47,7 +47,7 @@ class BlogMapperTest {
   }
 
   @Test
-  void whenMapToFluxOfDocument_FluxMatches() {
+  void whenMapToFluxOfDocument_thenFluxMatches() {
     BlogDto blogDto = createBlogDto(id, title, content, author);
     Blog expected = createBlog(id, title, content, author);
 
@@ -59,7 +59,7 @@ class BlogMapperTest {
   }
 
   @Test
-  void whenMapToDto_DtoMatches() {
+  void whenMapToDto_thenDtoMatches() {
     Blog blog = createBlog(id, title, content, author, now, now, auditUser, auditUser, version);
     BlogDto expected = createBlogDto(id, title, content, author, now, now, auditUser, auditUser, version);
 
@@ -69,7 +69,7 @@ class BlogMapperTest {
   }
 
   @Test
-  void whenMapToFluxOfDtos_FluxMatches() {
+  void whenMapToFluxOfDtos_thenFluxMatches() {
     Blog blog = createBlog(id, title, content, author);
     BlogDto expected = createBlogDto(id, title, content, author);
 
