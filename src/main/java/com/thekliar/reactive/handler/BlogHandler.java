@@ -1,13 +1,15 @@
 package com.thekliar.reactive.handler;
 
 import static com.thekliar.reactive.config.AppConstants.ID;
-import static org.springframework.web.reactive.function.server.ServerResponse.created;
-import static org.springframework.web.reactive.function.server.ServerResponse.ok;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 import java.net.URI;
-import com.thekliar.reactive.model.Blog;
-import com.thekliar.reactive.model.QBlog;
-import com.thekliar.reactive.repository.BlogRepository;
+import com.thekliar.reactive.dto.BlogDto;
+import com.thekliar.reactive.service.BlogService;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.Errors;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import lombok.RequiredArgsConstructor;
@@ -17,29 +19,48 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class BlogHandler {
 
-  private final BlogRepository blogRepository;
+  private final BlogService blogService;
+  private final ValidationHandler validator;
 
   public Mono<ServerResponse> save(ServerRequest request) {
-    return request
-        .bodyToMono(Blog.class)
-        .flatMap(blogRepository::insert)
-        .flatMap(blog -> created(URI.create("/blogs/".concat(blog.getId()))).build());
+
+    return request.bodyToMono(BlogDto.class).flatMap(dto -> {
+      Errors errors = validator.validate(dto);
+      if (errors.hasErrors()) {
+        return onValidationErrors(errors);
+      } else {
+        return processBody(dto);
+      }
+    });
+  }
+
+  private Mono<ServerResponse> processBody(BlogDto dto) {
+    boolean isUpdate = dto.getId() != null;
+
+    return blogService.save(dto).flatMap(savedDto -> ServerResponse.status(isUpdate ? OK : CREATED)
+        .location(URI.create("/blogs/" + savedDto.getId())).contentType(MediaType.APPLICATION_JSON)
+        .bodyValue(savedDto));
+  }
+
+  private Mono<ServerResponse> onValidationErrors(Errors errors) {
+    return ServerResponse.status(BAD_REQUEST).bodyValue(errors.getAllErrors());
   }
 
   public Mono<ServerResponse> findById(ServerRequest request) {
-    return blogRepository.findOne(QBlog.blog.id.eq(request.pathVariable(ID)))
-        .flatMap(blog -> ServerResponse.ok().bodyValue(blog))
-        .switchIfEmpty(Mono.defer(() -> ServerResponse.notFound().build()));
+    String id = request.pathVariable(ID);
+    return blogService.findById(id)
+        .flatMap(dto -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(dto))
+        .switchIfEmpty(ServerResponse.notFound().build());
   }
 
   @SuppressWarnings("unused")
   public Mono<ServerResponse> findAll(ServerRequest request) {
-    return ok().body(blogRepository.findAll(), Blog.class);
+    return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)
+        .body(blogService.findAll(), BlogDto.class);
   }
 
   public Mono<ServerResponse> deleteById(ServerRequest request) {
     String id = request.pathVariable(ID);
-    Mono<Void> monoVoid = blogRepository.deleteById(id);
-    return ok().body(monoVoid, Blog.class);
+    return ServerResponse.ok().body(blogService.deleteById(id), Void.class);
   }
 }

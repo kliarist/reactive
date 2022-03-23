@@ -16,7 +16,6 @@ dist/
 
 # Maven
 target/
-dist/
 
 # JetBrains IDE
 .idea/
@@ -72,6 +71,7 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 /src/main/generated/com/thekliar/reactive/model/
+/src/main/generated/com/thekliar/reactive/mapper/
 
 ### NetBeans ###
 /nbproject/private/

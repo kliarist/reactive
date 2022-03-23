@@ -28,15 +28,19 @@ dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-webflux'
   implementation 'org.apache.kafka:kafka-streams'
 
+  implementation "org.mapstruct:mapstruct:$mapstructVersion"
+
   implementation ("com.querydsl:querydsl-mongodb") {
     exclude group: 'org.mongodb'
   }
+  implementation 'org.springframework.boot:spring-boot-starter-validation'
 
   compileOnly 'org.projectlombok:lombok'
 
   annotationProcessor(
       'org.projectlombok:lombok',
       "com.querydsl:querydsl-apt:$queryDslVersion:general",
+      "org.mapstruct:mapstruct-processor:$mapstructVersion",
   )
 
   testImplementation ('org.springframework.boot:spring-boot-starter-test') {
@@ -71,6 +75,15 @@ jacocoTestReport {
     xml.required = true
     csv.required = true
     html.outputLocation = layout.buildDirectory.dir('reports/jacocoHtml')
+  }
+
+  afterEvaluate {
+    classDirectories.setFrom(files(classDirectories.files.collect {
+      fileTree(dir: it, exclude: [
+          "com/thekliar/reactive/model/*",
+          "com/thekliar/reactive/dto/*"
+      ])
+    }))
   }
 }
 
