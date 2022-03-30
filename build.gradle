@@ -1,8 +1,10 @@
 plugins {
   id 'org.springframework.boot' version '2.6.4'
   id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+  id 'org.springframework.cloud.contract' version '3.1.1'
   id 'java'
   id 'jacoco'
+  id 'groovy'
   id 'checkstyle'
   id "org.sonarqube" version "3.3"
   id 'com.palantir.git-version' version '0.13.0'
@@ -53,6 +55,15 @@ dependencies {
   testImplementation "org.testcontainers:testcontainers:${testContainersVersion}"
   testImplementation "org.testcontainers:junit-jupiter:${testContainersVersion}"
   testImplementation "org.testcontainers:mongodb:${testContainersVersion}"
+
+  testImplementation("org.springframework.cloud:spring-cloud-starter-contract-verifier")
+  testImplementation ("io.rest-assured:spring-web-test-client")
+}
+
+dependencyManagement {
+  imports {
+    mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+  }
 }
 
 tasks.withType(Test).configureEach {
@@ -89,9 +100,38 @@ jacocoTestReport {
   }
 }
 
+contracts {
+  testFramework = "JUNIT5"
+  testMode = "WEBTESTCLIENT"
+  // set package to be generated so we can exclude it in checkstyle TODO: check if there's a better way
+  packageWithBaseClasses = 'com.thekliar.reactive.generated'
+  baseClassMappings {
+    baseClassMapping(".*blogs.*", "com.thekliar.reactive.BlogBase")
+  }
+}
+
+contractTest {
+  useJUnitPlatform()
+  testLogging {
+    exceptionFormat = 'full'
+  }
+  // Optional report
+//  afterSuite { desc, result ->
+//    if (!desc.parent) {
+//      println "Results: (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
+//      boolean skipTests = Boolean.parseBoolean(project.findProperty('SKIP_TESTS') ?: "false")
+//      if (result.testCount == 0 && !skipTests) {
+//        throw new IllegalStateException("No tests were found. Failing the build")
+//      }
+//    }
+//  }
+}
+
 // Set the below to SKIP checkstyle by default
 //project.tasks.checkstyleMain.enabled = false
 //project.tasks.checkstyleTest.enabled = false
+
+checkstyleContractTest.exclude('**/generated/*.java')
 
 checkstyle {
   toolVersion = "9.3"
