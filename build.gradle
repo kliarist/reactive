@@ -29,11 +29,11 @@ dependencies {
   implementation 'org.apache.kafka:kafka-streams'
 
   implementation "org.mapstruct:mapstruct:$mapstructVersion"
-
   implementation ("com.querydsl:querydsl-mongodb") {
     exclude group: 'org.mongodb'
   }
   implementation 'org.springframework.boot:spring-boot-starter-validation'
+  implementation "org.jetbrains:annotations:$jetbrainsAnnotationsVersion"
 
   compileOnly 'org.projectlombok:lombok'
 
