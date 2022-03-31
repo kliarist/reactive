@@ -34,8 +34,10 @@ public class BlogRouter {
               operationId = "save",
               description = "Saves or updates a Blog. Will attempt to update when the id json value is present and exists in the DB.",
               responses = {
-                  @ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(schema = @Schema(implementation = BlogDto.class))),
-                  @ApiResponse(responseCode = "201", description = "Successful operation", content = @Content(schema = @Schema(implementation = BlogDto.class))),
+                  @ApiResponse(responseCode = "200", description = "Successful operation",
+                      content = @Content(schema = @Schema(implementation = BlogDto.class))),
+                  @ApiResponse(responseCode = "201", description = "Successful operation",
+                      content = @Content(schema = @Schema(implementation = BlogDto.class))),
                   @ApiResponse(responseCode = "400", description = "Invalid BlogDto supplied")},
               requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = BlogDto.class)))
           )),
@@ -46,7 +48,8 @@ public class BlogRouter {
               operationId = "deleteById",
               description = "Deletes a Blog by its id.",
               responses = {
-                  @ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = "Boolean")),
+                  @ApiResponse(responseCode = "200", description = "Successful operation",
+                      content = @Content(mediaType = "Boolean")),
                   @ApiResponse(responseCode = "400", description = "Bad request")},
               parameters = {
                   @Parameter(in = ParameterIn.PATH, name = "id")}
@@ -58,7 +61,8 @@ public class BlogRouter {
               operationId = "findById",
               description = "Fetches a Blog by its id.",
               responses = {
-                  @ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(schema = @Schema(implementation = BlogDto.class))),
+                  @ApiResponse(responseCode = "200", description = "Successful operation",
+                      content = @Content(schema = @Schema(implementation = BlogDto.class))),
                   @ApiResponse(responseCode = "400", description = "Bad request")},
               parameters = {
                   @Parameter(in = ParameterIn.PATH, name = "id")})
@@ -70,7 +74,8 @@ public class BlogRouter {
               operationId = "findAll",
               description = "Fetches all Blogs.",
               responses = {
-                  @ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(schema = @Schema(implementation = BlogDto.class))),
+                  @ApiResponse(responseCode = "200", description = "Successful operation",
+                      content = @Content(schema = @Schema(implementation = BlogDto.class))),
                   @ApiResponse(responseCode = "400", description = "Bad request")})
       )})
   public RouterFunction<ServerResponse> composedRoutes(final BlogHandler blogHandler) {
