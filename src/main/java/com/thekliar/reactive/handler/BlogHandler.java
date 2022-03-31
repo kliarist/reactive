@@ -7,6 +7,7 @@ import static org.springframework.http.HttpStatus.OK;
 import java.net.URI;
 import com.thekliar.reactive.dto.BlogDto;
 import com.thekliar.reactive.service.BlogService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -22,7 +23,7 @@ public class BlogHandler {
   private final BlogService blogService;
   private final ValidationHandler validator;
 
-  public Mono<ServerResponse> save(ServerRequest request) {
+  public @NotNull Mono<ServerResponse> save(ServerRequest request) {
 
     return request.bodyToMono(BlogDto.class).flatMap(dto -> {
       Errors errors = validator.validate(dto);
@@ -46,7 +47,7 @@ public class BlogHandler {
     return ServerResponse.status(BAD_REQUEST).bodyValue(errors.getAllErrors());
   }
 
-  public Mono<ServerResponse> findById(ServerRequest request) {
+  public @NotNull Mono<ServerResponse> findById(ServerRequest request) {
     String id = request.pathVariable(ID);
     return blogService.findById(id)
         .flatMap(dto -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(dto))
@@ -54,12 +55,12 @@ public class BlogHandler {
   }
 
   @SuppressWarnings("unused")
-  public Mono<ServerResponse> findAll(ServerRequest request) {
+  public @NotNull Mono<ServerResponse> findAll(ServerRequest request) {
     return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)
         .body(blogService.findAll(), BlogDto.class);
   }
 
-  public Mono<ServerResponse> deleteById(ServerRequest request) {
+  public @NotNull Mono<ServerResponse> deleteById(ServerRequest request) {
     String id = request.pathVariable(ID);
     return ServerResponse.ok().body(blogService.deleteById(id), Void.class);
   }

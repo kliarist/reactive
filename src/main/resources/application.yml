@@ -1,3 +1,4 @@
+# spring properties
 spring:
   config:
     activate:
@@ -12,3 +13,10 @@ spring:
       authentication-database: admin
   jackson:
     default-property-inclusion: non_null
+
+# springdoc properties
+springdoc:
+  swagger-ui:
+    path: /api/reactive/swagger-ui.html
+  api-docs:
+    path: /api/reactive/api-docs
