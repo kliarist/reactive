@@ -34,6 +34,8 @@ dependencies {
   }
   implementation 'org.springframework.boot:spring-boot-starter-validation'
   implementation "org.jetbrains:annotations:$jetbrainsAnnotationsVersion"
+  implementation "org.springdoc:springdoc-openapi-webflux-core:$springdocOpenApiVersion"
+  implementation "org.springdoc:springdoc-openapi-webflux-ui:$springdocOpenApiVersion"
 
   compileOnly 'org.projectlombok:lombok'
 
