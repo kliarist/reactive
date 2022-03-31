@@ -61,12 +61,18 @@ docker-compose up -d reactive-mongo
 docker-compose up -d reactive-server
 ```
 
+### Open API
+
+After you have started the reactive-server the Open API documentation can be accessed on
+
+* [/api/reactive/swagger-ui.html](http://localhost:8080/api/reactive/swagger-ui.html) 
+* [/api/reactive/api-docs](http://localhost:8080/api/reactive/api-docs)
+
 ### TODO (Consider adding a PR)
 * Explore Kafka streams/KStream
 * JWT
 * Spring security
 * Global error handling
-* Open API
 
 ## Useful links
 
