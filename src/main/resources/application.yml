@@ -1,5 +1,7 @@
 # spring properties
 spring:
+  application:
+    name: reactive
   config:
     activate:
       on-profile: local
@@ -13,6 +15,23 @@ spring:
       authentication-database: admin
   jackson:
     default-property-inclusion: non_null
+  kafka:
+    bootstrap-servers: desdora:19000
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      properties:
+        spring.json.trusted.packages: "*"
+      group-id: reactive
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+
+# kafka properties
+kafka:
+  topic:
+    blog-events: reactive-server-blog-events
 
 # springdoc properties
 springdoc:
