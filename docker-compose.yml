@@ -11,14 +11,14 @@ services:
     container_name: reactive-server
     restart: unless-stopped
     environment:
-      - SPRING_DATA_MONGODB_HOST=desdora
-      - SPRING_DATA_MONGODB_PORT=27017
-      - SPRING_DATA_MONGODB_DATABASE=reactive-boot
-      - SPRING_DATA_MONGODB_AUTHENTICATION-DATABASE=admin
-      - SPRING_DATA_MONGODB_USERNAME=citizix
-      - SPRING_DATA_MONGODB_PASSWORD=S3cret
+      SPRING_DATA_MONGODB_HOST: desdora
+      SPRING_DATA_MONGODB_PORT: 27017
+      SPRING_DATA_MONGODB_DATABASE: reactive-boot
+      SPRING_DATA_MONGODB_AUTHENTICATION-DATABASE: admin
+      SPRING_DATA_MONGODB_USERNAME: citizix
+      SPRING_DATA_MONGODB_PASSWORD: S3cret
     ports:
-      - 8080:8080
+      - '8080:8080'
     depends_on:
       - reactive-mongo
     networks:
@@ -32,10 +32,10 @@ services:
     volumes:
       - ~/docker-data/mongo:/data/db
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=citizix
-      - MONGO_INITDB_ROOT_PASSWORD=S3cret
+      MONGO_INITDB_ROOT_USERNAME: citizix
+      MONGO_INITDB_ROOT_PASSWORD: S3cret
     ports:
-      - 27017:27017
+      - '27017:27017'
     networks:
       - reactive
 
@@ -45,26 +45,9 @@ services:
     container_name: reactive-mongoku
     restart: unless-stopped
     ports:
-      - 3100:3100
-    networks:
-      - reactive
-
-  reactive-express:
-    image: mongo-express
-    hostname: reactive-express
-    container_name: reactive-express
-    restart: unless-stopped
-    ports:
-      - 8081:8081
-    environment:
-      - ME_CONFIG_MONGODB_SERVER=reactive-mongo
-      - ME_CONFIG_MONGODB_PORT=27017
-      - ME_CONFIG_MONGODB_ENABLE_ADMIN=false
-      - ME_CONFIG_MONGODB_AUTH_DATABASE=admin
-      - ME_CONFIG_MONGODB_AUTH_USERNAME=citizix
-      - ME_CONFIG_MONGODB_AUTH_PASSWORD=S3cret
-      - ME_CONFIG_BASICAUTH_USERNAME=citizix
-      - ME_CONFIG_BASICAUTH_PASSWORD=S3cret
+      - '3100:3100'
+    depends_on:
+      - reactive-mongo
     networks:
       - reactive
 
@@ -74,7 +57,7 @@ services:
     container_name: reactive-zookeeper
     restart: unless-stopped
     ports:
-      - "2181:2181"
+      - '2181:2181'
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
@@ -87,18 +70,35 @@ services:
     container_name: reactive-kafka
     restart: unless-stopped
     ports:
-      - '29092:29092'
+      - '19000:19000'
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: reactive-zookeeper:2181
-      KAFKA_LISTENERS: HOST://reactive-kafka:29092,DOCKER://reactive-kafka:9092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: HOST:PLAINTEXT,DOCKER:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: HOST://reactive-kafka:19000,DOCKER://reactive-kafka:9092
+      KAFKA_ADVERTISED_LISTENERS: HOST://desdora:19000,DOCKER://reactive-kafka:9092
       KAFKA_INTER_BROKER_LISTENER_NAME: DOCKER
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
       KAFKA_LOG4J_ROOT_LOGLEVEL: WARN
       CONFLUENT_METRICS_ENABLE: 'false'
       JMX_PORT: 9099
+    depends_on:
+      - reactive-zookeeper
+    networks:
+      - reactive
+
+  reactive-kafka-ui:
+    image: provectuslabs/kafka-ui
+    hostname: reactive-kafka-ui
+    container_name: reactive-kafka-ui
+    ports:
+      - '8082:8080'
+    restart: always
+    environment:
+      KAFKA_CLUSTERS_0_NAME: reactive
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: reactive-kafka:19000
+      KAFKA_CLUSTERS_0_ZOOKEEPER: reactive-zookeeper:2181
+    depends_on:
+      - reactive-kafka
     networks:
       - reactive
