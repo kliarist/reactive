@@ -27,6 +27,8 @@ dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
   implementation 'org.springframework.boot:spring-boot-starter-webflux'
   implementation 'org.apache.kafka:kafka-streams'
+  implementation 'org.springframework.kafka:spring-kafka'
+  implementation "io.projectreactor.kafka:reactor-kafka:$reactorKafkaVersion"
 
   implementation "org.mapstruct:mapstruct:$mapstructVersion"
   implementation ("com.querydsl:querydsl-mongodb") {
