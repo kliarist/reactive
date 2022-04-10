@@ -6,17 +6,18 @@ networks:
 services:
 
   reactive-server:
-    image: reactive:0.0.1-SNAPSHOT
+    image: reactive:v0.0.4-6-gce64105.dirty
     hostname: reactive-server
     container_name: reactive-server
     restart: unless-stopped
     environment:
-      SPRING_DATA_MONGODB_HOST: desdora
+      SPRING_DATA_MONGODB_HOST: reactive-mongo
       SPRING_DATA_MONGODB_PORT: 27017
       SPRING_DATA_MONGODB_DATABASE: reactive-boot
       SPRING_DATA_MONGODB_AUTHENTICATION-DATABASE: admin
       SPRING_DATA_MONGODB_USERNAME: citizix
       SPRING_DATA_MONGODB_PASSWORD: S3cret
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: reactive-kafka:19000
     ports:
       - '8080:8080'
     depends_on:
