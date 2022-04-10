@@ -1,22 +1,12 @@
+# DEFAULT properties
+
 # spring properties
 spring:
   application:
     name: reactive
-  config:
-    activate:
-      on-profile: local
-  data:
-    mongodb:
-      host: desdora
-      port: 27017
-      username: citizix
-      password: S3cret
-      database: reactive-boot
-      authentication-database: admin
   jackson:
     default-property-inclusion: non_null
   kafka:
-    bootstrap-servers: desdora:19000
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
@@ -31,7 +21,7 @@ spring:
 # kafka properties
 kafka:
   topic:
-    blog-events: reactive-server-blog-events
+    blog-events: "reactive-server-blog-events"
 
 # springdoc properties
 springdoc:
@@ -39,3 +29,22 @@ springdoc:
     path: /api/reactive/swagger-ui.html
   api-docs:
     path: /api/reactive/api-docs
+
+---
+# LOCAL properties only
+
+# spring properties
+spring:
+  config:
+    activate:
+      on-profile: local
+  data:
+    mongodb:
+      host: desdora
+      port: 27017
+      username: citizix
+      password: S3cret
+      database: reactive-boot
+      authentication-database: admin
+  kafka:
+    bootstrap-servers: desdora:19000
