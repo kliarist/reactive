@@ -4,11 +4,13 @@
 # Reactive
 
 ## Description
-A SpringBoot POC using:
-* Reactive Functions
-* MongoDB
-* Reactive repositories  
-* QueryDSL
+A [SpringBoot](https://spring.io/projects/spring-boot) POC using:
+* [Reactive Functions | Reactive repositories](https://spring.io/reactive)
+* [MongoDB](https://www.mongodb.com/)
+* [Apache Kafka](https://kafka.apache.org/)
+* [QueryDSL](http://querydsl.com/)
+* [Mapstruct](https://mapstruct.org/)
+* [Lombok](https://projectlombok.org/)
 
 ## Getting Started
 
@@ -24,52 +26,89 @@ The project is using Git.
 After cloning the project navigate to the root directory of the project and execute (if you havent
 done so):
 
-```
-git config user.name "FIRST_NAME LAST_NAME"
-git config user.email "MY_NAME@example.com"
+```shell
+> git config user.name "FIRST_NAME LAST_NAME"
+> git config user.email "MY_NAME@example.com"
 ```
 
 also PLEASE install commit-msg hook:
 
-```
-git config core.hooksPath .githooks
+```shell
+> git config core.hooksPath .githooks
 ```
 
 This will handle the consistency across commit messages. 
 
-The git commit standard followed is [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) 
+The git commit standard followed is [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/). 
 
 
 ### Build
-Build using `./gradlew clean build`.
+Build using:
+
+```shell
+> ./gradlew clean build
+```
 
 ### Dockerise  
-Docker build using `./gradlew bootBuildImage`.
+Docker build using:
+
+```shell
+> ./gradlew bootBuildImage
+```
 
 ### Development  
-For local development start Mongo by using `docker-compose up -d reactive-mongo` and then run the 
-  shared idea configuration `ReactiveApplication`.
+For local development start Mongo:
+
+```shell
+> docker-compose up -d reactive-mongo
+```
+
+then Zookeeper/Kafka
+
+```shell
+> docker-compose up -d reactive-zookeeper
+> docker-compose up -d reactive-kafka
+```
+
+
+and then run the shared idea configuration `ReactiveApplication`.
+
+For visualising Mongo and Kafka go ahead and use the following web-uis:
+
+```shell
+> docker-compose up -d reactive-mongoku
+> docker-compose up -d reactive-kafka-ui
+```
+
+* [Mongoku](http://localhost:3100)
+* [Apache Kafka UI](http://localhost:8082)
 
 ### Testing
-For running all tests run the shared idea configuration `AllTests`.
+For running all tests run the shared idea configuration `AllTests`
 
 ### Run using Docker Compose
 
-After you have Dockerised the `reactive-server` you can run in Docker using: 
+After you have Dockerised the `reactive-server` via: 
+
+```shell
+> ./gradlew spring-boot:build-image
 ```
-docker-compose up -d reactive-mongo
-docker-compose up -d reactive-server
+
+you can run everything in Docker Compose using:
+
+```shell
+> docker-compose up -d 
 ```
 
 ### Open API
 
-After you have started the reactive-server the Open API documentation can be accessed on
+After you have started the reactive-server the Open API documentation can be accessed on:
 
 * [/api/reactive/swagger-ui.html](http://localhost:8080/api/reactive/swagger-ui.html) 
 * [/api/reactive/api-docs](http://localhost:8080/api/reactive/api-docs)
 
 ### TODO (Consider adding a PR)
-* Explore Kafka streams/KStream
+* Explore Kafka streams/KStream API
 * JWT
 * Spring security
 * Global error handling
